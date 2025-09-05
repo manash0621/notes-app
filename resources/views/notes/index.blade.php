@@ -13,9 +13,24 @@
     <div class="container mx-auto p-6">
         <div class="flex justify-between items-center mb-6">
             <h1 class="text-2xl font-bold">My Notes</h1>
-            <button id="openCreateModal" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 font-bold">
-                + Add Note
-            </button>
+
+            <!-- User Info + Add Note Button -->
+            <div class="flex items-center gap-4">
+                @auth
+                    <span class="text-gray-700 font-semibold">Hello, {{ auth()->user()->name }}</span>
+                    <form method="POST" action="{{ route('logout') }}">
+                        @csrf
+                        <button type="submit"
+                            class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 font-bold text-sm">
+                            Logout
+                        </button>
+                    </form>
+                @endauth
+
+                <button id="openCreateModal" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 font-bold">
+                    + Add Note
+                </button>
+            </div>
         </div>
 
         <!-- Notes Table -->
@@ -39,13 +54,13 @@
                                 <td class="px-4 py-2 border text-center whitespace-nowrap">
                                     <div class="inline-flex items-center gap-2">
                                         <button
-                                            class="editBtn bg-yellow-500 hover:bg-yellow-600 text-dark px-3 py-1 rounded text-sm font-bold border inline-block"
+                                            class="editBtn bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1 rounded text-sm font-bold border inline-block"
                                             data-id="{{ $note->id }}" data-title="{{ $note->title }}"
                                             data-content="{{ $note->content }}">
                                             ✏️Edit
                                         </button>
                                         <button
-                                            class="deleteBtn bg-red-500 hover:bg-red-600 text-red px-3 py-1 rounded text-sm font-bold border inline-block"
+                                            class="deleteBtn bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm font-bold border inline-block"
                                             data-id="{{ $note->id }}">
                                             🗑️Delete
                                         </button>
