@@ -15,10 +15,6 @@ class NoteController extends Controller
                      ->latest()
                      ->paginate(10);
 
-        if (request()->ajax()) {
-            return response()->json($notes);
-        }
-
         return view('notes.index', compact('notes'));
     }
 
@@ -40,7 +36,10 @@ class NoteController extends Controller
 
     public function update(Request $request, Note $note)
     {
-        $this->authorize('update', $note);
+        // Ensure the note belongs to the logged-in user
+        if ($note->user_id !== Auth::id()) {
+            return response()->json(['success' => false, 'message' => 'Unauthorized'], 403);
+        }
 
         $request->validate([
             'title'   => 'required|max:100',
@@ -54,7 +53,10 @@ class NoteController extends Controller
 
     public function destroy(Note $note)
     {
-        $this->authorize('delete', $note);
+        // Ensure the note belongs to the logged-in user
+        if ($note->user_id !== Auth::id()) {
+            return response()->json(['success' => false, 'message' => 'Unauthorized'], 403);
+        }
 
         $note->delete();
 
